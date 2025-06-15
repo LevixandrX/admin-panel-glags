@@ -48,11 +48,11 @@ export function Sidebar() {
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-card/50 backdrop-blur-sm border-r transition-all duration-300 ease-in-out",
+        "flex flex-col h-full bg-card/50 backdrop-blur-sm border-r overflow-x-hidden",
         collapsed ? "w-16" : "w-64",
       )}
     >
-      <div className="flex items-center justify-between h-16 px-4 border-b">
+      <div className="flex items-center justify-between px-4 py-5 border-b">
         {!collapsed && (
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
@@ -73,7 +73,7 @@ export function Sidebar() {
         </Button>
       </div>
 
-      <nav className="flex-1 px-2 py-6 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-2 py-6 space-y-1 overflow-y-auto overflow-x-hidden">
         {navigationItems.map((item) => {
           const isActive = pathname === item.href
           return (
@@ -81,7 +81,7 @@ export function Sidebar() {
               <Button
                 variant={isActive ? "default" : "ghost"}
                 className={cn(
-                  "w-full transition-all duration-200 relative group",
+                  "w-full relative group",
                   collapsed ? "h-12 w-12 p-0 mx-auto flex items-center justify-center" : "justify-start gap-3 px-3",
                   isActive
                     ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg"

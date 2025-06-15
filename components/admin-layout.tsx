@@ -1,14 +1,16 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
+import { AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import { Sidebar } from "./sidebar"
 import { Header } from "./header"
 import { SidebarProvider, useSidebar } from "./sidebar-provider"
+import { PageTransition } from "./page-transition"
+import { cn } from "@/lib/utils"
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -21,8 +23,16 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
   return (
     <div className="flex h-screen">
       {/* Desktop Sidebar */}
-      <div className={`hidden md:flex md:flex-col transition-all duration-300 ${collapsed ? "md:w-16" : "md:w-64"}`}>
-        <Sidebar />
+      <div 
+        className="hidden md:block relative"
+        style={{ 
+          width: collapsed ? '64px' : '256px',
+          transition: 'width 0.3s ease-in-out'
+        }}
+      >
+        <div className="absolute inset-0 overflow-hidden">
+          <Sidebar />
+        </div>
       </div>
 
       {/* Mobile Sidebar */}
@@ -40,7 +50,11 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-6">
+          <AnimatePresence mode="wait">
+            <PageTransition>{children}</PageTransition>
+          </AnimatePresence>
+        </main>
       </div>
     </div>
   )
