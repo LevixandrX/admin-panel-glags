@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { ShoppingCart, Search, Filter, Plus, Package, Truck, CheckCircle, Clock } from "lucide-react"
+import { FilterButton } from "@/components/filter-button"
 
 const ordersData = [
   {
@@ -174,7 +175,7 @@ export default function OrdersPage() {
               <p className="text-muted-foreground">Управляйте заказами и отслеживайте доставки</p>
             </div>
             <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus />
               Создать заказ
             </Button>
           </div>
@@ -226,23 +227,6 @@ export default function OrdersPage() {
             </Card>
           </div>
 
-          {/* Search and Filter */}
-          <div className="flex items-center space-x-4">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Поиск заказов..."
-                className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              Фильтр
-            </Button>
-          </div>
-
           {/* Orders Table */}
           <Card>
             <CardHeader>
@@ -250,6 +234,17 @@ export default function OrdersPage() {
               <CardDescription>Полная информация о заказах и их статусах</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <Input
+                    placeholder="Поиск заказов..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-64"
+                  />
+                  <FilterButton />
+                </div>
+              </div>
               <SortableTable columns={columns} data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
             </CardContent>
           </Card>

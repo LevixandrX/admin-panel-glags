@@ -16,7 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MoreHorizontal, Edit, Trash2, Plus, Search } from "lucide-react"
+import { MoreHorizontal, Edit, Trash2, Plus, Search, UserPlus } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/hooks/use-toast"
 
@@ -138,7 +138,7 @@ export function UsersTable() {
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button className="gradient-bg hover:opacity-90">
-              <Plus className="mr-2 h-4 w-4" />
+              <UserPlus />
               Добавить пользователя
             </Button>
           </DialogTrigger>

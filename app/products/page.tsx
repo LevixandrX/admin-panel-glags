@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { useLanguage } from "@/components/language-provider"
 import { useToast } from "@/hooks/use-toast"
 import { Package, Search, Filter, Plus, Star, Eye, ShoppingCart } from "lucide-react"
+import { FilterButton } from "@/components/filter-button"
 
 const productsData = [
   {
@@ -64,7 +64,6 @@ const productsData = [
 ]
 
 export default function ProductsPage() {
-  const { t } = useLanguage()
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -110,29 +109,24 @@ export default function ProductsPage() {
   const columns: TableColumn[] = [
     {
       key: "name",
-      label: "Товар",
+      label: "Название",
       sortable: true,
-      render: (value, row) => (
-        <div className="flex items-center space-x-3">
-          <img src={row.image || "/placeholder.svg"} alt={value} className="w-10 h-10 rounded-lg object-cover" />
-          <div>
-            <div className="font-medium">{value}</div>
-            <div className="text-sm text-muted-foreground">{row.category}</div>
-          </div>
-        </div>
-      ),
+    },
+    {
+      key: "category",
+      label: "Категория",
+      sortable: true,
     },
     {
       key: "price",
       label: "Цена",
       sortable: true,
-      render: (value) => <span className="font-mono">{value.toLocaleString()} ₽</span>,
+      render: (value) => `${value.toLocaleString()} ₽`,
     },
     {
       key: "stock",
-      label: "Остаток",
+      label: "На складе",
       sortable: true,
-      render: (value) => <span className="font-mono">{value}</span>,
     },
     {
       key: "status",
@@ -146,24 +140,22 @@ export default function ProductsPage() {
       sortable: true,
       render: (value) => (
         <div className="flex items-center">
-          <Star className="w-4 h-4 text-yellow-400 mr-1" />
-          <span>{value}</span>
+          <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
+          {value}
         </div>
       ),
+    },
+    {
+      key: "views",
+      label: "Просмотры",
+      sortable: true,
     },
     {
       key: "sales",
       label: "Продажи",
       sortable: true,
-      render: (value) => <span className="font-mono">{value}</span>,
     },
   ]
-
-  const filteredData = productsData.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
 
   return (
     <RouteGuard>
@@ -172,92 +164,37 @@ export default function ProductsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Товары</h1>
-              <p className="text-muted-foreground">Управляйте каталогом товаров</p>
+              <p className="text-muted-foreground">Управляйте товарами, их ценами и наличием</p>
             </div>
             <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus />
               Добавить товар
             </Button>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid gap-4 md:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Всего товаров</CardTitle>
-                <Package className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{productsData.length}</div>
-                <p className="text-xs text-muted-foreground">В каталоге</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Общие просмотры</CardTitle>
-                <Eye className="h-4 w-4 text-blue-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-blue-600">
-                  {productsData.reduce((sum, p) => sum + p.views, 0).toLocaleString()}
-                </div>
-                <p className="text-xs text-muted-foreground">За месяц</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Общие продажи</CardTitle>
-                <ShoppingCart className="h-4 w-4 text-green-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">
-                  {productsData.reduce((sum, p) => sum + p.sales, 0)}
-                </div>
-                <p className="text-xs text-muted-foreground">За месяц</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Средний рейтинг</CardTitle>
-                <Star className="h-4 w-4 text-yellow-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-yellow-600">
-                  {(productsData.reduce((sum, p) => sum + p.rating, 0) / productsData.length).toFixed(1)}
-                </div>
-                <p className="text-xs text-muted-foreground">Из 5.0</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Search and Filter */}
-          <div className="flex items-center space-x-4">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Поиск товаров..."
-                className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              Фильтр
-            </Button>
-          </div>
-
-          {/* Products Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Каталог товаров</CardTitle>
-              <CardDescription>Полный список товаров с информацией о наличии и продажах</CardDescription>
+              <CardTitle>Список товаров</CardTitle>
             </CardHeader>
             <CardContent>
-              <SortableTable columns={columns} data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <Input
+                    placeholder="Поиск товаров..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-64"
+                  />
+                  <FilterButton />
+                </div>
+              </div>
+
+              <SortableTable
+                data={productsData}
+                columns={columns}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
             </CardContent>
           </Card>
         </div>

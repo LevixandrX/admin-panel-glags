@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { RouteGuard } from "@/components/route-guard"
 import { AdminLayout } from "@/components/admin-layout"
 import { StatsCards } from "@/components/stats-cards"
@@ -5,8 +8,20 @@ import { UsersTable } from "@/components/users-table"
 import { AnalyticsChart } from "@/components/analytics-chart"
 import { RecentActivity } from "@/components/recent-activity"
 import { QuickActions } from "@/components/quick-actions"
+import { Users, Search, Filter, Plus, UserPlus } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
 
 export default function AdminDashboard() {
+  const { toast } = useToast()
+
+  const handleAdd = () => {
+    toast({
+      title: "Добавление пользователя",
+      description: "Открытие формы добавления нового пользователя",
+    })
+  }
+
   return (
     <RouteGuard>
       <AdminLayout>

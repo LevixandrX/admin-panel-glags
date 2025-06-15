@@ -4,7 +4,6 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useLanguage } from "@/components/language-provider"
 import { useSidebar } from "@/components/sidebar-provider"
 import {
   LayoutDashboard,
@@ -26,25 +25,24 @@ import {
 } from "lucide-react"
 
 const navigationItems = [
-  { key: "dashboard", href: "/", icon: LayoutDashboard, badge: null },
-  { key: "users", href: "/users", icon: Users, badge: "12" },
-  { key: "warehouse", href: "/warehouse", icon: Warehouse, badge: "156" },
-  { key: "adminManagement", href: "/admin-management", icon: UserCog, badge: "8" },
-  { key: "modules", href: "/modules", icon: Puzzle, badge: null },
-  { key: "templates", href: "/templates", icon: FileTemplate, badge: "24" },
-  { key: "products", href: "/products", icon: Package, badge: null },
-  { key: "orders", href: "/orders", icon: CreditCard, badge: "3" },
-  { key: "analytics", href: "/analytics", icon: BarChart3, badge: null },
-  { key: "messages", href: "/messages", icon: MessageSquare, badge: "5" },
-  { key: "calendar", href: "/calendar", icon: Calendar, badge: null },
-  { key: "reports", href: "/reports", icon: FileText, badge: null },
-  { key: "security", href: "/security", icon: Shield, badge: null },
-  { key: "settings", href: "/settings", icon: Settings, badge: null },
+  { key: "dashboard", href: "/", icon: LayoutDashboard, badge: null, label: "Панель управления" },
+  { key: "users", href: "/users", icon: Users, badge: "12", label: "Пользователи" },
+  { key: "warehouse", href: "/warehouse", icon: Warehouse, badge: "156", label: "Склад" },
+  { key: "adminManagement", href: "/admin-management", icon: UserCog, badge: "8", label: "Админы" },
+  { key: "modules", href: "/modules", icon: Puzzle, badge: null, label: "Модули" },
+  { key: "templates", href: "/templates", icon: FileTemplate, badge: "24", label: "Шаблоны" },
+  { key: "products", href: "/products", icon: Package, badge: null, label: "Товары" },
+  { key: "orders", href: "/orders", icon: CreditCard, badge: "3", label: "Заказы" },
+  { key: "analytics", href: "/analytics", icon: BarChart3, badge: null, label: "Аналитика" },
+  { key: "messages", href: "/messages", icon: MessageSquare, badge: "5", label: "Сообщения" },
+  { key: "calendar", href: "/calendar", icon: Calendar, badge: null, label: "Календарь" },
+  { key: "reports", href: "/reports", icon: FileText, badge: null, label: "Отчеты" },
+  { key: "security", href: "/security", icon: Shield, badge: null, label: "Безопасность" },
+  { key: "settings", href: "/settings", icon: Settings, badge: null, label: "Настройки" },
 ]
 
 export function Sidebar() {
   const pathname = usePathname()
-  const { t } = useLanguage()
   const { collapsed, toggleCollapsed } = useSidebar()
 
   return (
@@ -93,7 +91,7 @@ export function Sidebar() {
                 <item.icon className={cn("h-5 w-5 flex-shrink-0", collapsed ? "mx-auto" : "")} />
                 {!collapsed && (
                   <div className="flex items-center justify-between w-full">
-                    <span>{t(item.key as any)}</span>
+                    <span>{item.label}</span>
                     {item.badge && (
                       <Badge variant="secondary" className="ml-auto text-xs">
                         {item.badge}
@@ -106,7 +104,7 @@ export function Sidebar() {
                 {collapsed && (
                   <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 border shadow-lg">
                     <div className="flex items-center gap-2">
-                      {t(item.key as any)}
+                      {item.label}
                       {item.badge && (
                         <Badge variant="secondary" className="text-xs">
                           {item.badge}

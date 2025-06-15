@@ -324,7 +324,7 @@ export default function SecurityPage() {
                     <Dialog open={isBlockIPDialogOpen} onOpenChange={setIsBlockIPDialogOpen}>
                       <DialogTrigger asChild>
                         <Button className="gradient-bg hover:opacity-90">
-                          <Plus className="mr-2 h-4 w-4" />
+                          <Plus />
                           Заблокировать IP
                         </Button>
                       </DialogTrigger>
@@ -421,7 +421,7 @@ export default function SecurityPage() {
                     <Dialog open={isAddRuleDialogOpen} onOpenChange={setIsAddRuleDialogOpen}>
                       <DialogTrigger asChild>
                         <Button className="gradient-bg hover:opacity-90">
-                          <Plus className="mr-2 h-4 w-4" />
+                          <Plus />
                           Добавить правило
                         </Button>
                       </DialogTrigger>

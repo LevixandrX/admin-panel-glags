@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { RouteGuard } from "@/components/route-guard"
 import { AdminLayout } from "@/components/admin-layout"
 import { SortableTable, type TableColumn } from "@/components/sortable-table"
@@ -5,167 +8,119 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { FileText, Search, Filter, Plus, Mail, MessageSquare, FileImage, Code } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { FileText, Search, Filter, Plus } from "lucide-react"
+import { FilterButton } from "@/components/filter-button"
 
 const templatesData = [
   {
     id: 1,
-    name: "Welcome Email",
-    description: "Email template for new user registration",
-    type: "Email",
-    category: "User Onboarding",
-    status: "Active",
-    lastModified: "2024-01-15",
-    author: "Sarah Johnson",
-    usage: 1250,
-    size: "12 KB",
+    name: "Стандартный шаблон",
+    description: "Базовый шаблон для всех страниц",
+    type: "Страница",
+    status: "Активен",
+    lastUpdate: "2024-03-15",
+    author: "Glags Team",
   },
   {
     id: 2,
-    name: "Invoice Template",
-    description: "Professional invoice template for billing",
-    type: "Document",
-    category: "Finance",
-    status: "Active",
-    lastModified: "2024-01-14",
-    author: "Mike Davis",
-    usage: 890,
-    size: "25 KB",
+    name: "Шаблон блога",
+    description: "Шаблон для страниц блога",
+    type: "Блог",
+    status: "Активен",
+    lastUpdate: "2024-03-14",
+    author: "Glags Team",
   },
   {
     id: 3,
-    name: "Password Reset",
-    description: "Email template for password reset requests",
-    type: "Email",
-    category: "Security",
-    status: "Active",
-    lastModified: "2024-01-13",
-    author: "Emily Chen",
-    usage: 456,
-    size: "8 KB",
+    name: "Шаблон магазина",
+    description: "Шаблон для страниц магазина",
+    type: "Магазин",
+    status: "Неактивен",
+    lastUpdate: "2024-03-10",
+    author: "Glags Team",
   },
   {
     id: 4,
-    name: "Newsletter Template",
-    description: "Monthly newsletter template",
-    type: "Email",
-    category: "Marketing",
-    status: "Draft",
-    lastModified: "2024-01-12",
-    author: "John Smith",
-    usage: 0,
-    size: "18 KB",
+    name: "Шаблон портфолио",
+    description: "Шаблон для страниц портфолио",
+    type: "Портфолио",
+    status: "Активен",
+    lastUpdate: "2024-03-12",
+    author: "Glags Team",
   },
-  {
-    id: 5,
-    name: "Report Template",
-    description: "Standard report template for analytics",
-    type: "Document",
-    category: "Reports",
-    status: "Active",
-    lastModified: "2024-01-16",
-    author: "Robert Wilson",
-    usage: 234,
-    size: "32 KB",
-  },
-  {
-    id: 6,
-    name: "SMS Notification",
-    description: "SMS template for urgent notifications",
-    type: "SMS",
-    category: "Notifications",
-    status: "Active",
-    lastModified: "2024-01-11",
-    author: "Sarah Johnson",
-    usage: 678,
-    size: "2 KB",
-  },
-]
-
-const getTypeIcon = (type: string) => {
-  switch (type) {
-    case "Email":
-      return <Mail className="w-4 h-4" />
-    case "SMS":
-      return <MessageSquare className="w-4 h-4" />
-    case "Document":
-      return <FileImage className="w-4 h-4" />
-    default:
-      return <Code className="w-4 h-4" />
-  }
-}
-
-const getTypeBadge = (type: string) => {
-  const colors = {
-    Email: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-    SMS: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-    Document: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-  }
-
-  return (
-    <Badge className={colors[type as keyof typeof colors] || "bg-gray-100 text-gray-800"}>
-      {getTypeIcon(type)}
-      <span className="ml-1">{type}</span>
-    </Badge>
-  )
-}
-
-const getStatusBadge = (status: string) => {
-  return status === "Active" ? (
-    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
-  ) : (
-    <Badge variant="secondary">Draft</Badge>
-  )
-}
-
-const columns: TableColumn[] = [
-  {
-    key: "name",
-    label: "Template",
-    sortable: true,
-    render: (value, row) => (
-      <div>
-        <div className="font-medium">{value}</div>
-        <div className="text-sm text-muted-foreground">{row.description}</div>
-      </div>
-    ),
-  },
-  {
-    key: "type",
-    label: "Type",
-    sortable: true,
-    render: (value) => getTypeBadge(value),
-  },
-  { key: "category", label: "Category", sortable: true },
-  {
-    key: "status",
-    label: "Status",
-    sortable: true,
-    render: (value) => getStatusBadge(value),
-  },
-  { key: "author", label: "Author", sortable: true },
-  {
-    key: "usage",
-    label: "Usage",
-    sortable: true,
-    render: (value) => <span className="font-mono">{value.toLocaleString()}</span>,
-  },
-  { key: "size", label: "Size", sortable: true },
-  { key: "lastModified", label: "Last Modified", sortable: true },
 ]
 
 export default function TemplatesPage() {
+  const { toast } = useToast()
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleAdd = () => {
+    toast({
+      title: "Добавление шаблона",
+      description: "Открытие формы добавления нового шаблона",
+    })
+  }
+
   const handleEdit = (row: any) => {
-    console.log("Edit template:", row)
+    toast({
+      title: "Редактирование шаблона",
+      description: `Редактирование шаблона: ${row.name}`,
+    })
   }
 
   const handleDelete = (row: any) => {
-    console.log("Delete template:", row)
+    toast({
+      title: "Удаление шаблона",
+      description: `Шаблон "${row.name}" удален`,
+      variant: "destructive",
+    })
   }
 
-  const totalTemplates = templatesData.length
-  const activeTemplates = templatesData.filter((template) => template.status === "Active").length
-  const totalUsage = templatesData.reduce((sum, template) => sum + template.usage, 0)
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "Активен":
+        return <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Активен</Badge>
+      case "Неактивен":
+        return <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Неактивен</Badge>
+      default:
+        return <Badge variant="secondary">{status}</Badge>
+    }
+  }
+
+  const columns: TableColumn[] = [
+    {
+      key: "name",
+      label: "Название",
+      sortable: true,
+    },
+    {
+      key: "description",
+      label: "Описание",
+      sortable: true,
+    },
+    {
+      key: "type",
+      label: "Тип",
+      sortable: true,
+    },
+    {
+      key: "status",
+      label: "Статус",
+      sortable: true,
+      render: (value) => getStatusBadge(value),
+    },
+    {
+      key: "lastUpdate",
+      label: "Последнее обновление",
+      sortable: true,
+    },
+    {
+      key: "author",
+      label: "Автор",
+      sortable: true,
+    },
+  ]
 
   return (
     <RouteGuard>
@@ -173,82 +128,38 @@ export default function TemplatesPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Templates</h1>
-              <p className="text-muted-foreground">Manage email, document, and notification templates</p>
+              <h1 className="text-3xl font-bold tracking-tight">Шаблоны</h1>
+              <p className="text-muted-foreground">Управляйте шаблонами сайта</p>
             </div>
-            <Button className="gradient-bg hover:opacity-90">
-              <Plus className="mr-2 h-4 w-4" />
-              Create Template
+            <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
+              <Plus />
+              Добавить шаблон
             </Button>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid gap-4 md:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Templates</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{totalTemplates}</div>
-                <p className="text-xs text-muted-foreground">Available templates</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Templates</CardTitle>
-                <Mail className="h-4 w-4 text-green-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">{activeTemplates}</div>
-                <p className="text-xs text-muted-foreground">Currently in use</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Usage</CardTitle>
-                <MessageSquare className="h-4 w-4 text-blue-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-blue-600">{totalUsage.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">Times used</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Categories</CardTitle>
-                <FileImage className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">6</div>
-                <p className="text-xs text-muted-foreground">Template categories</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Search and Filter */}
-          <div className="flex items-center space-x-4">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input placeholder="Search templates..." className="pl-10" />
-            </div>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-          </div>
-
-          {/* Templates Table */}
           <Card>
             <CardHeader>
-              <CardTitle>All Templates</CardTitle>
-              <CardDescription>Manage your email, document, and notification templates</CardDescription>
+              <CardTitle>Список шаблонов</CardTitle>
             </CardHeader>
             <CardContent>
-              <SortableTable columns={columns} data={templatesData} onEdit={handleEdit} onDelete={handleDelete} />
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <Input
+                    placeholder="Поиск шаблонов..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-64"
+                  />
+                  <FilterButton />
+                </div>
+              </div>
+
+              <SortableTable
+                data={templatesData}
+                columns={columns}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
             </CardContent>
           </Card>
         </div>

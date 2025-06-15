@@ -211,7 +211,7 @@ export default function CalendarPage() {
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="gradient-bg hover:opacity-90">
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus />
                   Создать событие
                 </Button>
               </DialogTrigger>

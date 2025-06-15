@@ -19,7 +19,6 @@ export default function SettingsPage() {
     siteName: "Glags Админ Панель",
     siteUrl: "https://admin.example.com",
     adminEmail: "admin@example.com",
-    language: "ru",
     timezone: "Europe/Moscow",
     emailNotifications: true,
     pushNotifications: false,
@@ -97,21 +96,6 @@ export default function SettingsPage() {
                         value={settings.adminEmail}
                         onChange={(e) => handleSettingChange("adminEmail", e.target.value)}
                       />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="language">Язык</Label>
-                      <Select
-                        value={settings.language}
-                        onValueChange={(value) => handleSettingChange("language", value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="ru">Русский</SelectItem>
-                          <SelectItem value="en">English</SelectItem>
-                        </SelectContent>
-                      </Select>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="timezone">Часовой пояс</Label>
@@ -264,7 +248,7 @@ export default function SettingsPage() {
                   <div className="flex space-x-2">
                     <Button variant="outline">Создать резервную копию сейчас</Button>
                     <Button onClick={() => handleSave("Резервные копии")} className="gradient-bg hover:opacity-90">
-                      <Save className="mr-2 h-4 w-4" />
+                      <Save />
                       Сохранить изменения
                     </Button>
                   </div>

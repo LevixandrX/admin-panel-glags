@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { FileText, Download, Plus, Calendar, TrendingUp, Package, Eye, Filter } from "lucide-react"
+import { FileText, Download, Plus, Calendar, TrendingUp, Package, Eye, Filter, BarChart, Search } from "lucide-react"
+import { FilterButton } from "@/components/filter-button"
 
 const reportsData = [
   {
@@ -115,6 +116,7 @@ export default function ReportsPage() {
     includeDetails: true,
     recipients: "",
   })
+  const [searchQuery, setSearchQuery] = useState("")
 
   const handleCreateReport = () => {
     if (reportConfig.name && reportConfig.template && reportConfig.period) {
@@ -196,7 +198,7 @@ export default function ReportsPage() {
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="gradient-bg hover:opacity-90">
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus />
                   Создать отчет
                 </Button>
               </DialogTrigger>
@@ -395,13 +397,16 @@ export default function ReportsPage() {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Созданные отчеты</CardTitle>
-                    <Button variant="outline" size="sm">
-                      <Filter className="mr-2 h-4 w-4" />
-                      Фильтр
-                    </Button>
+                    <FilterButton />
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  <Input
+                    placeholder="Поиск отчетов..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-64"
+                  />
                   {reportsData.map((report) => (
                     <div key={report.id} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                       <div className="flex items-start justify-between mb-3">

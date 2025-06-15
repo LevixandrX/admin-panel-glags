@@ -18,9 +18,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Bell, Search, User, LogOut, Settings, MessageSquare } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
-import { LanguageToggle } from "./language-toggle"
 import { useAuth } from "./auth-provider"
-import { useLanguage } from "./language-provider"
 import { useToast } from "@/hooks/use-toast"
 
 const notifications = [
@@ -31,7 +29,6 @@ const notifications = [
 
 export function Header() {
   const { user, logout } = useAuth()
-  const { t } = useLanguage()
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
   const unreadCount = notifications.filter((n) => n.unread).length
@@ -69,7 +66,6 @@ export function Header() {
         </div>
 
         <div className="flex items-center space-x-4">
-          <LanguageToggle />
           <ThemeToggle />
 
           <Popover>
@@ -85,35 +81,32 @@ export function Header() {
             </PopoverTrigger>
             <PopoverContent className="w-80" align="end">
               <div className="space-y-4">
-                <h4 className="font-medium">Уведомления</h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Уведомления</h4>
+                  <Button variant="ghost" size="sm" className="text-xs">
+                    Отметить все как прочитанные
+                  </Button>
+                </div>
                 <div className="space-y-2">
                   {notifications.map((notification) => (
                     <div
                       key={notification.id}
-                      className={`p-3 rounded-lg border transition-colors hover:bg-muted/50 cursor-pointer ${
-                        notification.unread ? "bg-primary/5" : ""
-                      }`}
+                      className="flex items-start space-x-4 p-2 rounded-lg hover:bg-accent cursor-pointer"
                       onClick={() => markAsRead(notification.id)}
                     >
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium">{notification.title}</p>
-                        {notification.unread && <div className="w-2 h-2 bg-primary rounded-full" />}
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm font-medium leading-none">{notification.title}</p>
+                        <p className="text-xs text-muted-foreground">{notification.time}</p>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">{notification.time}</p>
+                      {notification.unread && (
+                        <div className="h-2 w-2 rounded-full bg-primary mt-1" />
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
             </PopoverContent>
           </Popover>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => toast({ title: "Сообщения", description: "Открытие раздела сообщений" })}
-          >
-            <MessageSquare className="h-5 w-5" />
-          </Button>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -141,7 +134,7 @@ export function Header() {
                 onClick={() => toast({ title: "Профиль", description: "Открытие профиля пользователя" })}
               >
                 <User className="mr-2 h-4 w-4" />
-                <span>{t("profile")}</span>
+                <span>Профиль</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => toast({ title: "Настройки", description: "Открытие настроек" })}>
                 <Settings className="mr-2 h-4 w-4" />
@@ -150,7 +143,7 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>{t("logout")}</span>
+                <span>Выйти</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
