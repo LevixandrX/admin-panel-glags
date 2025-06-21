@@ -92,3 +92,29 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes theme-sun-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes theme-moon-swing {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-20deg); }
+  40% { transform: rotate(15deg); }
+  60% { transform: rotate(-10deg); }
+  80% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-theme-sun-spin {
+  animation: theme-sun-spin 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+.animate-theme-moon-swing {
+  animation: theme-moon-swing 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+html, body {
+  transition: background 0.4s cubic-bezier(0.4,0,0.2,1), color 0.4s cubic-bezier(0.4,0,0.2,1);
+}

@@ -70,7 +70,7 @@ export function QuickActions() {
   }
 
   return (
-    <Card className="animate-slide-up">
+    <Card className="animate-slide-up min-w-0 max-w-full">
       <CardHeader>
         <CardTitle>Быстрые действия</CardTitle>
         <CardDescription>Часто используемые административные задачи</CardDescription>

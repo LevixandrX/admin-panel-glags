@@ -54,7 +54,7 @@ const typeColors = {
 
 export function RecentActivity() {
   return (
-    <Card className="animate-slide-up">
+    <Card className="animate-slide-up min-w-0 max-w-full">
       <CardHeader>
         <CardTitle>Последняя активность</CardTitle>
         <CardDescription>Последние действия и системные события</CardDescription>

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useSidebar } from "@/components/sidebar-provider"
+import { useIsMobile } from "@/hooks/use-mobile"
 import {
   LayoutDashboard,
   Users,
@@ -44,6 +45,7 @@ const navigationItems = [
 export function Sidebar() {
   const pathname = usePathname()
   const { collapsed, toggleCollapsed } = useSidebar()
+  const isMobile = useIsMobile()
 
   return (
     <div
@@ -63,14 +65,16 @@ export function Sidebar() {
             </h1>
           </div>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleCollapsed}
-          className="h-8 w-8 hover:bg-primary/10 transition-colors"
-        >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </Button>
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleCollapsed}
+            className="h-8 w-8 hover:bg-primary/10 transition-colors"
+          >
+            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
+        )}
       </div>
 
       <nav className="flex-1 px-2 py-6 space-y-1 overflow-y-auto overflow-x-hidden">

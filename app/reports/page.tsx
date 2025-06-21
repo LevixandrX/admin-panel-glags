@@ -190,153 +190,155 @@ export default function ReportsPage() {
     <RouteGuard>
       <AdminLayout>
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Отчеты</h1>
               <p className="text-muted-foreground">Создавайте и управляйте отчетами</p>
             </div>
-            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="gradient-bg hover:opacity-90">
-                  <Plus />
-                  Создать отчет
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Создание нового отчета</DialogTitle>
-                  <DialogDescription>Выберите шаблон и настройте параметры отчета</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="reportName">Название отчета</Label>
-                    <Input
-                      id="reportName"
-                      placeholder="Введите название отчета"
-                      value={reportConfig.name}
-                      onChange={(e) => setReportConfig({ ...reportConfig, name: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="template">Шаблон отчета</Label>
-                    <Select
-                      value={reportConfig.template}
-                      onValueChange={(value) => {
-                        setReportConfig({ ...reportConfig, template: value })
-                        setSelectedTemplate(value)
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Выберите шаблон отчета" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {reportTemplates.map((template) => (
-                          <SelectItem key={template.id} value={template.name}>
-                            {template.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {selectedTemplate && (
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base">Описание шаблона</CardTitle>
-                      </CardHeader>
-                      <CardContent>{reportTemplates.find((t) => t.name === selectedTemplate)?.description}</CardContent>
-                    </Card>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-4">
+            <div className="w-full flex justify-end sm:w-auto">
+              <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="gradient-bg hover:opacity-90">
+                    <Plus />
+                    Создать отчет
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Создание нового отчета</DialogTitle>
+                    <DialogDescription>Выберите шаблон и настройте параметры отчета</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="period">Период</Label>
+                      <Label htmlFor="reportName">Название отчета</Label>
+                      <Input
+                        id="reportName"
+                        placeholder="Введите название отчета"
+                        value={reportConfig.name}
+                        onChange={(e) => setReportConfig({ ...reportConfig, name: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="template">Шаблон отчета</Label>
                       <Select
-                        value={reportConfig.period}
-                        onValueChange={(value) => setReportConfig({ ...reportConfig, period: value })}
+                        value={reportConfig.template}
+                        onValueChange={(value) => {
+                          setReportConfig({ ...reportConfig, template: value })
+                          setSelectedTemplate(value)
+                        }}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Выберите период" />
+                          <SelectValue placeholder="Выберите шаблон отчета" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="today">Сегодня</SelectItem>
-                          <SelectItem value="yesterday">Вчера</SelectItem>
-                          <SelectItem value="week">Эта неделя</SelectItem>
-                          <SelectItem value="month">Этот месяц</SelectItem>
-                          <SelectItem value="quarter">Этот квартал</SelectItem>
-                          <SelectItem value="year">Этот год</SelectItem>
-                          <SelectItem value="custom">Произвольный период</SelectItem>
+                          {reportTemplates.map((template) => (
+                            <SelectItem key={template.id} value={template.name}>
+                              {template.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
 
+                    {selectedTemplate && (
+                      <Card>
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-base">Описание шаблона</CardTitle>
+                        </CardHeader>
+                        <CardContent>{reportTemplates.find((t) => t.name === selectedTemplate)?.description}</CardContent>
+                      </Card>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="period">Период</Label>
+                        <Select
+                          value={reportConfig.period}
+                          onValueChange={(value) => setReportConfig({ ...reportConfig, period: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Выберите период" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="today">Сегодня</SelectItem>
+                            <SelectItem value="yesterday">Вчера</SelectItem>
+                            <SelectItem value="week">Эта неделя</SelectItem>
+                            <SelectItem value="month">Этот месяц</SelectItem>
+                            <SelectItem value="quarter">Этот квартал</SelectItem>
+                            <SelectItem value="year">Этот год</SelectItem>
+                            <SelectItem value="custom">Произвольный период</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="format">Формат файла</Label>
+                        <Select
+                          value={reportConfig.format}
+                          onValueChange={(value) => setReportConfig({ ...reportConfig, format: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="PDF">PDF</SelectItem>
+                            <SelectItem value="Excel">Excel</SelectItem>
+                            <SelectItem value="CSV">CSV</SelectItem>
+                            <SelectItem value="Word">Word</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <Label>Дополнительные параметры</Label>
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id="includeCharts"
+                            checked={reportConfig.includeCharts}
+                            onChange={(e) => setReportConfig({ ...reportConfig, includeCharts: e.target.checked })}
+                            className="rounded"
+                          />
+                          <Label htmlFor="includeCharts">Включить графики и диаграммы</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id="includeDetails"
+                            checked={reportConfig.includeDetails}
+                            onChange={(e) => setReportConfig({ ...reportConfig, includeDetails: e.target.checked })}
+                            className="rounded"
+                          />
+                          <Label htmlFor="includeDetails">Включить детальные данные</Label>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <Label htmlFor="format">Формат файла</Label>
-                      <Select
-                        value={reportConfig.format}
-                        onValueChange={(value) => setReportConfig({ ...reportConfig, format: value })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="PDF">PDF</SelectItem>
-                          <SelectItem value="Excel">Excel</SelectItem>
-                          <SelectItem value="CSV">CSV</SelectItem>
-                          <SelectItem value="Word">Word</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="recipients">Получатели (email)</Label>
+                      <Input
+                        id="recipients"
+                        placeholder="email1@example.com, email2@example.com"
+                        value={reportConfig.recipients}
+                        onChange={(e) => setReportConfig({ ...reportConfig, recipients: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                        Отмена
+                      </Button>
+                      <Button onClick={handleCreateReport} className="gradient-bg hover:opacity-90">
+                        Создать отчет
+                      </Button>
                     </div>
                   </div>
-
-                  <div className="space-y-4">
-                    <Label>Дополнительные параметры</Label>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id="includeCharts"
-                          checked={reportConfig.includeCharts}
-                          onChange={(e) => setReportConfig({ ...reportConfig, includeCharts: e.target.checked })}
-                          className="rounded"
-                        />
-                        <Label htmlFor="includeCharts">Включить графики и диаграммы</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id="includeDetails"
-                          checked={reportConfig.includeDetails}
-                          onChange={(e) => setReportConfig({ ...reportConfig, includeDetails: e.target.checked })}
-                          className="rounded"
-                        />
-                        <Label htmlFor="includeDetails">Включить детальные данные</Label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="recipients">Получатели (email)</Label>
-                    <Input
-                      id="recipients"
-                      placeholder="email1@example.com, email2@example.com"
-                      value={reportConfig.recipients}
-                      onChange={(e) => setReportConfig({ ...reportConfig, recipients: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="flex justify-end space-x-2">
-                    <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                      Отмена
-                    </Button>
-                    <Button onClick={handleCreateReport} className="gradient-bg hover:opacity-90">
-                      Создать отчет
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
 
           {/* Stats Cards */}

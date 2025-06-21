@@ -126,15 +126,17 @@ export default function AdminManagementPage() {
     <RouteGuard>
       <AdminLayout>
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Управление админами</h1>
               <p className="text-muted-foreground">Управляйте администраторами и их правами</p>
             </div>
-            <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
-              <UserPlus/>
-              Добавить администратора
-            </Button>
+            <div className="w-full flex justify-end sm:w-auto">
+              <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
+                <UserPlus/>
+                Добавить администратора
+              </Button>
+            </div>
           </div>
 
           <Card>

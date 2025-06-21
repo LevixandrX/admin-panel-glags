@@ -229,8 +229,8 @@ export function UsersTable() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
+      <div className="rounded-md border overflow-x-auto">
+        <Table className="min-w-[600px] w-full">
           <TableHeader>
             <TableRow>
               <TableHead>Пользователь</TableHead>

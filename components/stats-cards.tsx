@@ -42,11 +42,11 @@ const stats = [
 
 export function StatsCards() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat, index) => (
         <Card
           key={stat.title}
-          className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 hover:scale-105 animate-slide-up"
+          className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 hover:scale-105 animate-slide-up min-w-0 max-w-full"
           style={{ animationDelay: `${index * 100}ms` }}
         >
           <div

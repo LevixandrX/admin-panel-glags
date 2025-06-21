@@ -206,7 +206,7 @@ export default function SecurityPage() {
     <RouteGuard>
       <AdminLayout>
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Безопасность</h1>
               <p className="text-muted-foreground">Мониторинг и управление безопасностью системы</p>

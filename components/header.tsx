@@ -20,6 +20,7 @@ import { Bell, Search, User, LogOut, Settings, MessageSquare } from "lucide-reac
 import { ThemeToggle } from "./theme-toggle"
 import { useAuth } from "./auth-provider"
 import { useToast } from "@/hooks/use-toast"
+import { cn } from "@/lib/utils"
 
 const notifications = [
   { id: 1, title: "Новый пользователь зарегистрирован", time: "2 мин назад", unread: true },
@@ -51,14 +52,18 @@ export function Header() {
   }
 
   return (
-    <header className="bg-card/50 backdrop-blur-sm border-b px-6 py-4">
+    <header className="bg-card/50 backdrop-blur-sm border-b px-4 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <form onSubmit={handleSearch} className="relative ml-12 md:ml-0">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 hidden md:block" />
             <Input
               placeholder="Поиск по всему..."
-              className="pl-10 w-80 transition-all duration-200 focus:w-96"
+              className={cn(
+                "transition-all duration-200",
+                "min-w-[160px] md:w-80 lg:focus:w-96",
+                "md:pl-10"
+              )}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -71,7 +76,7 @@ export function Header() {
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5" />
+                <Bell className="h-4 w-4" />
                 {unreadCount > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
                     {unreadCount}
@@ -79,7 +84,7 @@ export function Header() {
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80" align="end">
+            <PopoverContent className="w-96" align="end">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium">Уведомления</h4>
