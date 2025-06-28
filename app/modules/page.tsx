@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Puzzle, Search, Filter, Plus, CheckCircle, XCircle } from "lucide-react"
 import { FilterButton } from "@/components/filter-button"
+import { ModuleCreateDialog } from "@/components/users-table"
 
 const modulesData = [
   {
@@ -132,10 +133,7 @@ export default function ModulesPage() {
               <p className="text-muted-foreground">Управляйте модулями и их настройками</p>
             </div>
             <div className="w-full flex justify-end sm:w-auto">
-              <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
-                <Plus />
-                Добавить модуль
-              </Button>
+              <ModuleCreateDialog />
             </div>
           </div>
 

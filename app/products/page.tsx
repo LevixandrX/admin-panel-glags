@@ -9,10 +9,20 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { Package, Search, Filter, Plus, Star, Eye, ShoppingCart } from "lucide-react"
+import { Package, Search, Filter, Plus, Star, Eye, ShoppingCart, Edit } from "lucide-react"
 import { FilterButton } from "@/components/filter-button"
+import { ProductCreateDialog } from "@/components/users-table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-const productsData = [
+const initialProductsData = [
   {
     id: 1,
     name: "Беспроводные наушники",
@@ -66,27 +76,47 @@ const productsData = [
 export default function ProductsPage() {
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
+  const [products, setProducts] = useState(initialProductsData)
+  const [editProduct, setEditProduct] = useState<any | null>(null)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
-  const handleAdd = () => {
+  const handleProductCreated = (product: any) => {
+    setProducts((prev) => [
+      { ...product, id: Date.now() },
+      ...prev,
+    ])
     toast({
-      title: "Добавление товара",
-      description: "Открытие формы добавления нового товара",
+      title: "Товар создан",
+      description: `Новый товар ${product.name} добавлен в систему`,
     })
   }
 
-  const handleEdit = (row: any) => {
+  const handleProductEdited = (product: any) => {
+    setProducts((prev) => prev.map((p) => (p.id === product.id ? { ...p, ...product } : p)))
     toast({
-      title: "Редактирование товара",
-      description: `Редактирование товара: ${row.name}`,
+      title: "Товар обновлен",
+      description: `Данные товара ${product.name} обновлены`,
     })
+    setIsEditDialogOpen(false)
+    setEditProduct(null)
   }
 
-  const handleDelete = (row: any) => {
+  const handleProductDeleted = (product: any) => {
+    setProducts((prev) => prev.filter((p) => p.id !== product.id))
     toast({
-      title: "Удаление товара",
-      description: `Товар "${row.name}" удален`,
+      title: "Товар удален",
+      description: `Товар ${product.name} удален из системы`,
       variant: "destructive",
     })
+  }
+
+  const handleEdit = (product: any) => {
+    setEditProduct(product)
+    setIsEditDialogOpen(true)
+  }
+
+  const handleDelete = (product: any) => {
+    handleProductDeleted(product)
   }
 
   const getStatusBadge = (status: string) => {
@@ -157,6 +187,12 @@ export default function ProductsPage() {
     },
   ]
 
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
+
   return (
     <RouteGuard>
       <AdminLayout>
@@ -167,10 +203,7 @@ export default function ProductsPage() {
               <p className="text-muted-foreground">Управляйте товарами, их ценами и наличием</p>
             </div>
             <div className="w-full flex justify-end sm:w-auto">
-              <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
-                <Plus />
-                Добавить товар
-              </Button>
+              <ProductCreateDialog onProductCreated={handleProductCreated} />
             </div>
           </div>
 
@@ -192,13 +225,128 @@ export default function ProductsPage() {
               </div>
 
               <SortableTable
-                data={productsData}
+                data={filteredProducts}
                 columns={columns}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />
             </CardContent>
           </Card>
+
+          {/* Модальное окно редактирования товара */}
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Редактировать товар</DialogTitle>
+                <DialogDescription>Измените данные товара</DialogDescription>
+              </DialogHeader>
+              {editProduct && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductName">Название</Label>
+                      <Input
+                        id="editProductName"
+                        value={editProduct.name}
+                        onChange={(e) => setEditProduct({ ...editProduct, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductCategory">Категория</Label>
+                      <Input
+                        id="editProductCategory"
+                        value={editProduct.category}
+                        onChange={(e) => setEditProduct({ ...editProduct, category: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductPrice">Цена</Label>
+                      <Input
+                        id="editProductPrice"
+                        type="number"
+                        value={editProduct.price}
+                        onChange={(e) => setEditProduct({ ...editProduct, price: Number(e.target.value) })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductStock">На складе</Label>
+                      <Input
+                        id="editProductStock"
+                        type="number"
+                        value={editProduct.stock}
+                        onChange={(e) => setEditProduct({ ...editProduct, stock: Number(e.target.value) })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductStatus">Статус</Label>
+                      <Select value={editProduct.status} onValueChange={(value) => setEditProduct({ ...editProduct, status: value })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="В наличии">В наличии</SelectItem>
+                          <SelectItem value="Мало на складе">Мало на складе</SelectItem>
+                          <SelectItem value="Нет в наличии">Нет в наличии</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductImage">Изображение (URL)</Label>
+                      <Input
+                        id="editProductImage"
+                        value={editProduct.image}
+                        onChange={(e) => setEditProduct({ ...editProduct, image: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductRating">Рейтинг</Label>
+                      <Input
+                        id="editProductRating"
+                        type="number"
+                        step="0.1"
+                        value={editProduct.rating}
+                        onChange={(e) => setEditProduct({ ...editProduct, rating: Number(e.target.value) })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductViews">Просмотры</Label>
+                      <Input
+                        id="editProductViews"
+                        type="number"
+                        value={editProduct.views}
+                        onChange={(e) => setEditProduct({ ...editProduct, views: Number(e.target.value) })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="editProductSales">Продажи</Label>
+                      <Input
+                        id="editProductSales"
+                        type="number"
+                        value={editProduct.sales}
+                        onChange={(e) => setEditProduct({ ...editProduct, sales: Number(e.target.value) })}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                      Отмена
+                    </Button>
+                    <Button onClick={() => handleProductEdited(editProduct)} className="gradient-bg hover:opacity-90">
+                      Сохранить
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </AdminLayout>
     </RouteGuard>

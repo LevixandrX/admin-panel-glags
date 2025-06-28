@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { FileText, Search, Filter, Plus } from "lucide-react"
 import { FilterButton } from "@/components/filter-button"
+import { TemplateCreateDialog } from "@/components/users-table"
 
 const templatesData = [
   {
@@ -132,10 +133,7 @@ export default function TemplatesPage() {
               <p className="text-muted-foreground">Управляйте шаблонами сайта</p>
             </div>
             <div className="w-full flex justify-end sm:w-auto">
-              <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
-                <Plus />
-                Добавить шаблон
-              </Button>
+              <TemplateCreateDialog />
             </div>
           </div>
 

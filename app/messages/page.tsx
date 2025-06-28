@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useToast } from "@/hooks/use-toast"
 import { MessageSquare, Search, Send, Plus, Users, Clock, CheckCircle } from "lucide-react"
+import { MessageCreateDialog } from "@/components/users-table"
 
 const messagesData = [
   {
@@ -108,10 +109,7 @@ export default function MessagesPage() {
               <p className="text-muted-foreground">Управляйте сообщениями от пользователей</p>
             </div>
             <div className="w-full flex justify-end sm:w-auto">
-              <Button onClick={handleNewMessage} className="gradient-bg hover:opacity-90">
-                <Plus className="mr-2 h-4 w-4" />
-                Новое сообщение
-              </Button>
+              <MessageCreateDialog />
             </div>
           </div>
 

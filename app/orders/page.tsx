@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { ShoppingCart, Search, Filter, Plus, Package, Truck, CheckCircle, Clock } from "lucide-react"
 import { FilterButton } from "@/components/filter-button"
+import { OrderCreateDialog } from "@/components/users-table"
 
 const ordersData = [
   {
@@ -175,8 +176,7 @@ export default function OrdersPage() {
               <p className="text-muted-foreground">Управляйте заказами и отслеживайте доставки</p>
             </div>
             <Button onClick={handleAdd} className="gradient-bg hover:opacity-90">
-              <Plus />
-              Создать заказ
+              <OrderCreateDialog />
             </Button>
           </div>
 
